@@ -1,0 +1,8 @@
+Flask
+flask-cors
+google-generativeai
+Werkzeug
+itsdangerous
+blinker
+sqlite3-binary
+gunicorn

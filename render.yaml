@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: havuc-ai-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 120
+    envVars:
+      - key: AIzaSyBsdoKmreJeLL3oijo9-pq8yE26y3kB4Fo
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
