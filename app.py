@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", secrets.token_hex(16))
 CORS(app, supports_credentials=True)
 
 # Get API key from Render
-GEMINI_API_KEY = "AIzaSyBsdoKmreJeLL3oijo9-pq8yE26y3kB4Fo"
+GEMINI_API_KEY = "AIzaSyDGDmQd3f3U0F-yNQL9PZ-3ckyME-sHzzU"
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -210,3 +210,4 @@ def chat():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
