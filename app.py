@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, session
+from flask import Flask, request, jsonify, send_file, session
 from flask_cors import CORS
 import google.generativeai as genai
 import os
@@ -7,15 +7,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import secrets
 
-# Render'ın çalışma dizini
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "chatbot.db")
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", secrets.token_hex(16))
 CORS(app, supports_credentials=True)
 
-# API KEY Render ortamından alınır
+# Get API key from Render
 GEMINI_API_KEY = "AIzaSyBsdoKmreJeLL3oijo9-pq8yE26y3kB4Fo"
 
 if GEMINI_API_KEY:
@@ -23,7 +22,7 @@ if GEMINI_API_KEY:
     model = genai.GenerativeModel('models/gemini-2.5-flash')
 
 
-# Database setup
+# Initialize database
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -48,13 +47,13 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 init_db()
 
 
+# Serve index.html (root)
 @app.route('/')
 def index():
-    return send_from_directory('static', 'index.html')
+    return send_file(os.path.join(BASE_DIR, "index.html"))
 
 
 @app.route('/api/register', methods=['POST'])
