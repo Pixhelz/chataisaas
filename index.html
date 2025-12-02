@@ -4,42 +4,44 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>HavucAI — Akıllı Sohbet Asistanı</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    
     :root {
       --bg-primary: #0a0a0f;
-      --bg-secondary: #13131a;
+      --bg-secondary: #12121a;
       --bg-tertiary: #1a1a24;
-      --surface: #1f1f2e;
-      --surface-hover: #252536;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.06);
       --border: rgba(255,255,255,0.08);
-      --border-subtle: rgba(255,255,255,0.04);
       --text-primary: #ffffff;
-      --text-secondary: #a1a1b5;
-      --text-muted: #6b6b80;
+      --text-secondary: rgba(255,255,255,0.7);
+      --text-muted: rgba(255,255,255,0.5);
       --accent: #8b5cf6;
       --accent-hover: #7c3aed;
-      --accent-light: rgba(139,92,246,0.12);
+      --accent-glow: rgba(139,92,246,0.2);
       --success: #10b981;
       --error: #ef4444;
-      --gradient: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     html, body {
       height: 100%;
-      margin: 0;
-      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow: hidden;
     }
 
@@ -47,8 +49,6 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
-      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139,92,246,0.15), transparent 60%),
-                  var(--bg-primary);
     }
 
     /* Header */
@@ -57,9 +57,9 @@
       align-items: center;
       justify-content: space-between;
       padding: 16px 24px;
-      background: rgba(19,19,26,0.8);
-      backdrop-filter: blur(12px) saturate(180%);
-      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
       z-index: 100;
     }
 
@@ -70,31 +70,26 @@
     }
 
     .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--gradient);
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent), #06b6d4);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
     .brand-text h1 {
-      margin: 0;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       letter-spacing: -0.02em;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
     .brand-text p {
-      margin: 0;
       font-size: 12px;
       color: var(--text-muted);
+      margin-top: 2px;
     }
 
     .header-actions {
@@ -104,23 +99,22 @@
     }
 
     .user-badge {
-      padding: 8px 14px;
+      padding: 8px 16px;
       background: var(--surface);
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
       color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
     }
 
+    /* Buttons */
     .btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
+      padding: 10px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
-      border: none;
       font-family: inherit;
     }
 
@@ -132,68 +126,72 @@
 
     .btn-secondary:hover {
       background: var(--surface-hover);
-      color: var(--text-primary);
     }
 
     .btn-primary {
       background: var(--accent);
       color: white;
-      border: none;
-      box-shadow: 0 2px 8px rgba(139,92,246,0.3);
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
 
     .btn-primary:hover {
       background: var(--accent-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(139,92,246,0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
     }
 
     /* Main Layout */
     main.content {
       display: flex;
-      gap: 20px;
-      padding: 20px 24px;
+      gap: 0;
       flex: 1;
       overflow: hidden;
-      max-width: 1600px;
-      margin: 0 auto;
-      width: 100%;
     }
 
     /* Sidebar */
     aside.sidebar {
       width: 280px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      overflow-y: auto;
-      padding-right: 4px;
     }
-
-    aside.sidebar::-webkit-scrollbar { width: 6px; }
-    aside.sidebar::-webkit-scrollbar-track { background: transparent; }
-    aside.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      background: var(--surface-hover);
     }
 
     .card h3 {
-      margin: 0 0 8px 0;
       font-size: 14px;
       font-weight: 600;
+      margin-bottom: 8px;
       color: var(--text-primary);
     }
 
     .card p {
-      margin: 0;
       font-size: 13px;
-      color: var(--text-secondary);
       line-height: 1.5;
+      color: var(--text-secondary);
     }
 
     .quick-actions {
@@ -205,22 +203,21 @@
 
     .quick-btn {
       width: 100%;
-      text-align: left;
-      padding: 12px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
+      padding: 10px 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
       color: var(--text-secondary);
       font-size: 13px;
+      text-align: left;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .quick-btn:hover {
-      background: var(--surface-hover);
-      border-color: var(--border);
+      background: var(--surface);
       color: var(--text-primary);
-      transform: translateX(2px);
+      border-color: var(--accent);
     }
 
     /* Chat Area */
@@ -228,172 +225,60 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-width: 0;
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      border: 1px solid var(--border);
       overflow: hidden;
-      box-shadow: var(--shadow-md);
     }
 
-    /* Auth Screen */
-    .auth-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      padding: 40px;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 440px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .auth-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .auth-logo {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 16px;
-      border-radius: 16px;
-      background: var(--gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 24px rgba(139,92,246,0.3);
-    }
-
-    .auth-header h2 {
-      margin: 0 0 8px 0;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .auth-header p {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-size: 14px;
-      font-family: inherit;
-      transition: all 0.2s ease;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-light);
-    }
-
-    .form-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .error-message {
-      padding: 12px;
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.3);
-      border-radius: 8px;
-      color: #fca5a5;
-      font-size: 13px;
-      margin-top: 16px;
-    }
-
-    /* Chat Screen */
-    .chat-screen {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .messages-container {
+    .messages-wrapper {
       flex: 1;
       overflow-y: auto;
       padding: 24px;
       scroll-behavior: smooth;
     }
 
-    .messages-container::-webkit-scrollbar { width: 8px; }
-    .messages-container::-webkit-scrollbar-track { background: transparent; }
-    .messages-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
     .welcome-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
       text-align: center;
-      padding: 40px;
+      padding: 60px 24px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .welcome-icon {
-      width: 100px;
-      height: 100px;
-      margin-bottom: 24px;
-      border-radius: 24px;
-      background: var(--gradient);
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #06b6d4);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 12px 32px rgba(139,92,246,0.3);
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+      box-shadow: 0 8px 24px var(--accent-glow);
     }
 
     .welcome-screen h2 {
-      margin: 0 0 12px 0;
       font-size: 28px;
-      font-weight: 700;
+      font-weight: 600;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--accent), #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .welcome-screen p {
-      margin: 0;
+      font-size: 16px;
       color: var(--text-secondary);
-      font-size: 15px;
-      max-width: 480px;
+      line-height: 1.6;
     }
 
-    /* Message Bubbles */
+    /* Messages */
     .message {
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
-      animation: slideUp 0.3s ease;
+      animation: slideIn 0.3s ease;
     }
 
-    @keyframes slideUp {
+    @keyframes slideIn {
       from {
         opacity: 0;
         transform: translateY(10px);
@@ -408,28 +293,27 @@
       flex-direction: row-reverse;
     }
 
-    .message-avatar {
+    .avatar {
       width: 36px;
       height: 36px;
       min-width: 36px;
-      border-radius: 10px;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
     }
 
-    .message.user .message-avatar {
-      background: var(--accent-light);
-      border-color: var(--accent);
+    .message.user .avatar {
+      background: linear-gradient(135deg, var(--accent), #06b6d4);
+      border: none;
     }
 
     .message-content {
       max-width: 70%;
-      padding: 14px 18px;
-      border-radius: 16px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
       font-size: 14px;
       line-height: 1.6;
       word-wrap: break-word;
@@ -439,7 +323,6 @@
       background: var(--accent);
       color: white;
       border-radius: 16px 16px 4px 16px;
-      box-shadow: 0 2px 8px rgba(139,92,246,0.3);
     }
 
     .message.assistant .message-content {
@@ -450,9 +333,9 @@
     }
 
     /* Input Area */
-    .input-area {
+    .input-container {
       padding: 20px 24px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-top: 1px solid var(--border);
     }
 
@@ -464,14 +347,14 @@
       align-items: flex-end;
     }
 
-    .input-field {
+    textarea {
       flex: 1;
-      min-height: 48px;
-      max-height: 150px;
-      padding: 12px 18px;
+      min-height: 52px;
+      max-height: 180px;
+      padding: 14px 16px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       color: var(--text-primary);
       font-size: 14px;
       font-family: inherit;
@@ -479,89 +362,205 @@
       transition: all 0.2s ease;
     }
 
-    .input-field:focus {
+    textarea:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-light);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
-    .input-field::placeholder {
+    textarea::placeholder {
       color: var(--text-muted);
     }
 
     .send-button {
-      padding: 12px 20px;
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border: none;
+      border-radius: var(--radius-md);
       background: var(--accent);
       color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(139,92,246,0.3);
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
 
-    .send-button:hover:not(:disabled) {
+    .send-button:hover {
       background: var(--accent-hover);
       transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(139,92,246,0.4);
+      box-shadow: 0 6px 16px var(--accent-glow);
     }
 
-    .send-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .send-button:active {
+      transform: translateY(0);
+    }
+
+    /* Auth Screen */
+    .auth-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      margin: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .auth-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent), #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .auth-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .auth-header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .input-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .error-message {
+      padding: 12px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-sm);
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
     }
 
     /* Loading Animation */
-    .loading-indicator {
+    .loading-dots {
       display: flex;
       gap: 6px;
-      padding: 12px 18px;
+      padding: 12px 16px;
     }
 
-    .loading-dot {
+    .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--text-muted);
-      animation: loadingPulse 1.4s infinite;
+      animation: bounce 1.4s infinite ease-in-out;
     }
 
-    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
 
-    @keyframes loadingPulse {
-      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-      40% { opacity: 1; transform: scale(1); }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
     }
 
     /* Footer */
     footer {
-      padding: 16px 24px;
+      padding: 12px 24px;
       text-align: center;
       font-size: 12px;
       color: var(--text-muted);
-      border-top: 1px solid var(--border-subtle);
-      background: rgba(19,19,26,0.5);
+      border-top: 1px solid var(--border);
+      background: var(--bg-secondary);
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-      aside.sidebar { display: none; }
-      main.content { padding: 16px; }
+    @media (max-width: 768px) {
+      aside.sidebar {
+        display: none;
+      }
+
+      .message-content {
+        max-width: 85%;
+      }
+
+      .auth-card {
+        margin: 16px;
+        padding: 24px;
+      }
     }
 
-    @media (max-width: 640px) {
-      header.appbar { padding: 12px 16px; }
-      .brand-text p { display: none; }
-      .user-badge { display: none; }
-      .message-content { max-width: 85%; }
-      .input-area { padding: 16px; }
-      main.content { padding: 12px; }
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--surface-hover);
     }
   </style>
 </head>
@@ -572,7 +571,7 @@
       <div class="brand">
         <div class="logo">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M12 3l8 8-8 8-8-8 8-8z" fill="white" opacity="0.9"/>
+            <path d="M6.3 9.6c1-1.8 2.8-3.2 4.7-2.9 1.9.3 3.3 2.1 3.3 2.1s2.1 2.9 1.7 6.1c-.4 3.1-3 4.7-6 4.7-3 0-6.5-4-4.7-9z" fill="white"/>
           </svg>
         </div>
         <div class="brand-text">
@@ -580,10 +579,11 @@
           <p>Akıllı Sohbet Asistanı</p>
         </div>
       </div>
+
       <div class="header-actions">
-        <div id="userDisplayTop" class="user-badge">Misafir</div>
-        <button id="btnClear" class="btn btn-secondary">Temizle</button>
-        <button id="btnLogout" class="btn btn-primary">Çıkış</button>
+        <div class="user-badge" id="userDisplay">Misafir</div>
+        <button class="btn btn-secondary" id="btnClear">Temizle</button>
+        <button class="btn btn-primary" id="btnLogout">Çıkış</button>
       </div>
     </header>
 
@@ -593,99 +593,49 @@
       <aside class="sidebar">
         <div class="card">
           <h3>💡 HavucAI Nedir?</h3>
-          <p>Yapay zeka destekli akıllı asistan. Sorularınızı yanıtlar, görevlerinizde yardımcı olur.</p>
+          <p>Yapay zeka destekli, hızlı ve güvenilir sohbet deneyimi. Modern arayüz, güçlü yanıtlar.</p>
         </div>
 
         <div class="card">
           <h3>🚀 Hızlı Başlangıç</h3>
           <div class="quick-actions">
-            <button class="quick-btn" onclick="prefill('Bana 3 yaratıcı başlık önerisi ver.')">📝 Başlık Önerileri</button>
-            <button class="quick-btn" onclick="prefill('Profesyonel bir e-posta taslağı hazırla.')">✉️ E-posta Taslağı</button>
-            <button class="quick-btn" onclick="prefill('Kuantum bilgisayarları basit terimlerle açıkla.')">🔬 Kuantum Bilgisayarlar</button>
+            <button class="quick-btn" onclick="prefill('Bana 3 yaratıcı başlık öner')">📝 Başlık Önerisi</button>
+            <button class="quick-btn" onclick="prefill('Profesyonel bir e-posta taslağı hazırla')">✉️ E-posta Taslağı</button>
+            <button class="quick-btn" onclick="prefill('Kuantum bilgisayarlar nasıl çalışır?')">🔬 Kuantum Bilgisayar</button>
           </div>
         </div>
 
         <div class="card">
-          <h3>⭐ HavucAI Pro</h3>
-          <p style="margin-bottom: 12px;">Gelişmiş özellikler ve öncelikli destek yakında sizlerle.</p>
-          <button class="btn btn-primary" style="width: 100%;" onclick="alert('Bildirim talebi alındı!')">Bilgilendir</button>
+          <h3>⚡ HavucAI Pro</h3>
+          <p style="margin-bottom: 12px;">Gelişmiş özellikler ve öncelikli destek yakında.</p>
+          <button class="btn btn-primary" style="width: 100%; font-size: 13px;" onclick="alert('Bildirim kaydedildi!')">Haber Ver</button>
         </div>
       </aside>
 
-      <!-- Chat Area -->
-      <section class="chat-container">
-        <!-- Auth Screen -->
-        <div id="authScreen" class="auth-screen">
-          <div class="auth-card">
-            <div class="auth-header">
-              <div class="auth-logo">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 3l8 8-8 8-8-8 8-8z" fill="white"/>
-                </svg>
-              </div>
-              <h2>HavucAI'ye Hoş Geldiniz</h2>
-              <p>Devam etmek için giriş yapın veya hesap oluşturun</p>
+      <!-- Chat Container -->
+      <section class="chat-container" id="chatContainer">
+        <div class="messages-wrapper" id="messagesWrapper">
+          <div class="welcome-screen" id="welcomeScreen">
+            <div class="welcome-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                <path d="M6.3 9.6c1-1.8 2.8-3.2 4.7-2.9 1.9.3 3.3 2.1 3.3 2.1s2.1 2.9 1.7 6.1c-.4 3.1-3 4.7-6 4.7-3 0-6.5-4-4.7-9z" fill="white"/>
+              </svg>
             </div>
-
-            <!-- Login Form -->
-            <div id="loginForm">
-              <div class="form-group">
-                <input id="loginUsername" type="text" class="form-input" placeholder="Kullanıcı Adı" />
-              </div>
-              <div class="form-group">
-                <input id="loginPassword" type="password" class="form-input" placeholder="Şifre" />
-              </div>
-              <div class="form-actions">
-                <button onclick="login()" class="btn btn-primary" style="flex: 1;">Giriş Yap</button>
-                <button onclick="showRegister()" class="btn btn-secondary">Kayıt Ol</button>
-              </div>
-              <div id="authError" class="error-message" style="display: none;"></div>
-            </div>
-
-            <!-- Register Form -->
-            <div id="registerForm" style="display: none;">
-              <div class="form-group">
-                <input id="regUsername" type="text" class="form-input" placeholder="Kullanıcı Adı" />
-              </div>
-              <div class="form-group">
-                <input id="regEmail" type="email" class="form-input" placeholder="E-posta" />
-              </div>
-              <div class="form-group">
-                <input id="regPassword" type="password" class="form-input" placeholder="Şifre" />
-              </div>
-              <div class="form-actions">
-                <button onclick="register()" class="btn btn-primary" style="flex: 1;">Kayıt Ol</button>
-                <button onclick="showLogin()" class="btn btn-secondary">Geri Dön</button>
-              </div>
-              <div id="regAuthError" class="error-message" style="display: none;"></div>
-            </div>
+            <h2>Merhaba! 👋</h2>
+            <p>HavucAI ile güçlü ve hızlı sohbet deneyimine hoş geldiniz. Size nasıl yardımcı olabilirim?</p>
           </div>
+          <div id="messages"></div>
         </div>
 
-        <!-- Chat Screen -->
-        <div id="chatScreen" class="chat-screen" style="display: none;">
-          <div id="messages" class="messages-container">
-            <div id="welcome" class="welcome-screen">
-              <div class="welcome-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 3l8 8-8 8-8-8 8-8z" fill="white"/>
-                </svg>
-              </div>
-              <h2>Merhaba! 👋</h2>
-              <p>HavucAI ile sohbete başlayın. Size nasıl yardımcı olabilirim?</p>
-            </div>
-          </div>
-
-          <div class="input-area">
-            <div class="input-wrapper">
-              <textarea id="userInput" class="input-field" placeholder="Mesajınızı yazın..." rows="1"></textarea>
-              <button id="sendBtn" class="send-button">
-                <span>Gönder</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
+        <!-- Input Area -->
+        <div class="input-container">
+          <div class="input-wrapper">
+            <textarea id="userInput" placeholder="Mesajınızı yazın..." rows="1"></textarea>
+            <button class="send-button" id="sendBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" fill="white"/>
+              </svg>
+            </button>
           </div>
         </div>
       </section>
@@ -693,91 +643,139 @@
 
     <!-- Footer -->
     <footer>
-      © <span id="year"></span> HavucAI — Modern • Güvenli • Hızlı
+      © <span id="year"></span> HavucAI — Premium AI Chat Experience
     </footer>
   </div>
 
+  <!-- Auth Overlay -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <path d="M6.3 9.6c1-1.8 2.8-3.2 4.7-2.9 1.9.3 3.3 2.1 3.3 2.1s2.1 2.9 1.7 6.1c-.4 3.1-3 4.7-6 4.7-3 0-6.5-4-4.7-9z" fill="white"/>
+          </svg>
+        </div>
+        <h2>HavucAI'ye Hoş Geldiniz</h2>
+        <p>Devam etmek için giriş yapın veya kayıt olun</p>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginForm">
+        <div class="input-group">
+          <input type="text" id="loginUsername" placeholder="Kullanıcı Adı" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="loginPassword" placeholder="Şifre" />
+        </div>
+        <div class="auth-actions">
+          <button class="btn btn-primary" style="flex: 1;" onclick="login()">Giriş Yap</button>
+          <button class="btn btn-secondary" onclick="showRegister()">Kayıt Ol</button>
+        </div>
+        <div class="error-message" id="loginError"></div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerForm" style="display: none;">
+        <div class="input-group">
+          <input type="text" id="regUsername" placeholder="Kullanıcı Adı" />
+        </div>
+        <div class="input-group">
+          <input type="email" id="regEmail" placeholder="E-posta" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="regPassword" placeholder="Şifre" />
+        </div>
+        <div class="auth-actions">
+          <button class="btn btn-primary" style="flex: 1;" onclick="register()">Kayıt Ol</button>
+          <button class="btn btn-secondary" onclick="showLogin()">Giriş'e Dön</button>
+        </div>
+        <div class="error-message" id="registerError"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // State
     let messages = [];
     let isLoading = false;
     let currentUser = null;
 
+    // DOM Elements
+    const authOverlay = document.getElementById('authOverlay');
+    const chatContainer = document.getElementById('chatContainer');
+    const messagesDiv = document.getElementById('messages');
+    const messagesWrapper = document.getElementById('messagesWrapper');
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const userDisplay = document.getElementById('userDisplay');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginError = document.getElementById('loginError');
+    const registerError = document.getElementById('registerError');
+
+    // Utils
     const $ = (id) => document.getElementById(id);
-    
-    function escapeHtml(unsafe) {
-      if (!unsafe) return '';
-      return String(unsafe)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-        .replace(/\n/g, '<br/>');
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
-
-    const messagesDiv = $('messages');
-    const userInput = $('userInput');
-    const sendBtn = $('sendBtn');
-    const authScreen = $('authScreen');
-    const chatScreen = $('chatScreen');
-    const welcomeEl = $('welcome');
-    const authError = $('authError');
-    const regAuthError = $('regAuthError');
-    const userDisplayTop = $('userDisplayTop');
-
-    document.getElementById('year').textContent = new Date().getFullYear();
 
     function showAuth() {
-      authScreen.style.display = 'flex';
-      chatScreen.style.display = 'none';
-      userDisplayTop.textContent = 'Misafir';
+      authOverlay.style.display = 'flex';
+      userDisplay.textContent = 'Misafir';
     }
 
-    function showChat() {
-      authScreen.style.display = 'none';
-      chatScreen.style.display = 'flex';
-      userDisplayTop.textContent = currentUser || 'Kullanıcı';
-      setTimeout(() => scrollToBottom(), 100);
-    }
-
-    function showRegister() {
-      $('loginForm').style.display = 'none';
-      $('registerForm').style.display = 'block';
-      hideAuthErrors();
+    function hideAuth() {
+      authOverlay.style.display = 'none';
+      userDisplay.textContent = currentUser || 'Kullanıcı';
     }
 
     function showLogin() {
-      $('registerForm').style.display = 'none';
-      $('loginForm').style.display = 'block';
-      hideAuthErrors();
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      loginError.classList.remove('show');
+      registerError.classList.remove('show');
     }
 
-    function hideAuthErrors() {
-      if (authError) { authError.style.display = 'none'; authError.textContent = ''; }
-      if (regAuthError) { regAuthError.style.display = 'none'; regAuthError.textContent = ''; }
+    function showRegister() {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      loginError.classList.remove('show');
+      registerError.classList.remove('show');
     }
 
+    // Auth Functions
     async function checkAuth() {
       try {
         const res = await fetch('/api/check-auth', { credentials: 'include' });
         const data = await res.json();
         if (data.authenticated) {
           currentUser = data.username;
-          showChat();
+          hideAuth();
           await loadChatHistory();
         } else {
           showAuth();
         }
       } catch (err) {
-        console.warn('Auth check failed', err);
+        console.error('Auth check failed', err);
         showAuth();
       }
     }
 
     async function login() {
-      const username = $('loginUsername').value;
+      const username = $('loginUsername').value.trim();
       const password = $('loginPassword').value;
-      hideAuthErrors();
+      
+      if (!username || !password) {
+        loginError.textContent = 'Lütfen tüm alanları doldurun';
+        loginError.classList.add('show');
+        return;
+      }
+
       try {
         const res = await fetch('/api/login', {
           method: 'POST',
@@ -786,25 +784,32 @@
           body: JSON.stringify({ username, password })
         });
         const data = await res.json();
+        
         if (data.success) {
           currentUser = data.username;
-          showChat();
+          hideAuth();
           await loadChatHistory();
         } else {
-          authError.textContent = data.error || 'Giriş başarısız';
-          authError.style.display = 'block';
+          loginError.textContent = data.error || 'Giriş başarısız';
+          loginError.classList.add('show');
         }
       } catch (err) {
-        authError.textContent = 'Bağlantı hatası';
-        authError.style.display = 'block';
+        loginError.textContent = 'Bağlantı hatası';
+        loginError.classList.add('show');
       }
     }
 
     async function register() {
-      const username = $('regUsername').value;
-      const email = $('regEmail').value;
+      const username = $('regUsername').value.trim();
+      const email = $('regEmail').value.trim();
       const password = $('regPassword').value;
-      hideAuthErrors();
+      
+      if (!username || !email || !password) {
+        registerError.textContent = 'Lütfen tüm alanları doldurun';
+        registerError.classList.add('show');
+        return;
+      }
+
       try {
         const res = await fetch('/api/register', {
           method: 'POST',
@@ -813,16 +818,17 @@
           body: JSON.stringify({ username, email, password })
         });
         const data = await res.json();
+        
         if (data.success) {
           currentUser = data.username;
-          showChat();
+          hideAuth();
         } else {
-          regAuthError.textContent = data.error || 'Kayıt başarısız';
-          regAuthError.style.display = 'block';
+          registerError.textContent = data.error || 'Kayıt başarısız';
+          registerError.classList.add('show');
         }
       } catch (err) {
-        regAuthError.textContent = 'Bağlantı hatası';
-        regAuthError.style.display = 'block';
+        registerError.textContent = 'Bağlantı hatası';
+        registerError.classList.add('show');
       }
     }
 
@@ -831,21 +837,24 @@
         await fetch('/api/logout', { method: 'POST', credentials: 'include' });
         currentUser = null;
         messages = [];
-        clearMessages();
+        messagesDiv.innerHTML = '';
+        welcomeScreen.style.display = 'block';
         showAuth();
       } catch (err) {
         console.error('Logout failed', err);
       }
     }
 
+    // Chat Functions
     async function loadChatHistory() {
       try {
         const res = await fetch('/api/chat-history', { credentials: 'include' });
         const data = await res.json();
-        if (data.messages && data.messages.length) {
-          messages = data.messages.slice();
-          if (welcomeEl) welcomeEl.style.display = 'none';
-          data.messages.forEach(m => addMessage(m.role, m.content, false));
+        
+        if (data.messages && data.messages.length > 0) {
+          messages = data.messages;
+          welcomeScreen.style.display = 'none';
+          data.messages.forEach(msg => addMessage(msg.role, msg.content, false));
           scrollToBottom();
         }
       } catch (err) {
@@ -854,16 +863,25 @@
     }
 
     async function clearHistory() {
-      const ok = confirm('Tüm sohbet geçmişini silmek istediğinize emin misiniz?');
-      if (!ok) return;
+      if (!confirm('Tüm sohbet geçmişini silmek istediğinize emin misiniz?')) return;
+      
       try {
         await fetch('/api/clear-history', { method: 'POST', credentials: 'include' });
         messages = [];
-        clearMessages();
-        if (welcomeEl) welcomeEl.style.display = 'flex';
+        messagesDiv.innerHTML = '';
+        welcomeScreen.style.display = 'block';
       } catch (err) {
         console.error('Clear failed', err);
       }
     }
 
-    function clear
+    function addMessage(role, content, animate = true) {
+      welcomeScreen.style.display = 'none';
+      
+      const messageEl = document.createElement('div');
+      messageEl.className = `message ${role}`;
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.innerHTML = role === 'user' 
+        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="white" stroke-width="2"/><path d="M6 21c
