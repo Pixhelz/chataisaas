@@ -959,7 +959,80 @@ function isLoggedIn() {
 }
 
 // Chat functionality
-function sendMessage() {
+// Yeni Fonksiyon: Sohbet Geçmişini Toplama
+function getChatHistory() {
+    const messagesContainer = document.getElementById('messages');
+    const messageElements = messagesContainer.querySelectorAll('.message:not([id^="loading-"])');
+    
+    const history = [];
+
+    messageElements.forEach(element => {
+        // ClassName: "message user" veya "message bot"
+        const sender = element.classList.contains('user') ? 'user' : 'assistant'; 
+        const content = element.querySelector('.message-content').textContent;
+
+        if (content) {
+            history.push({
+                role: sender,
+                content: content
+            });
+        }
+    });
+
+    // İlk karşılama mesajını (Merhaba! Ben LiaRoza...) hariç tutmak istersen, 
+    // history array'inin ilk elemanını kontrol edebilirsin.
+    return history;
+}
+
+
+/**
+ * Backend API'yi çağırarak Gemini'den yanıt alır.
+ * @param {Array<Object>} history Mesaj geçmişi [{role: 'user/assistant', content: '...'}]
+ * @returns {Promise<string>} Bot yanıtı
+ */
+async function getGeminiResponseFromApi(history) {
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // ! BURAYI KENDİ RENDER ALAN ADINIZLA DEĞİŞTİRMEYİ UNUTMAYIN (Örn: liaroza-chat) !
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    const RENDER_DOMAIN = 'https://app-py-4xb9.onrender.com';
+    const API_URL = `${RENDER_DOMAIN}/api/chat`; 
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            // Backend Flask uygulamanız session (cookie) kullandığı için bu ÇOK ÖNEMLİDİR.
+            credentials: 'include', 
+            body: JSON.stringify({ 
+                // Backend'in beklediği "messages" array'ini gönderiyoruz
+                messages: history
+            })
+        });
+
+        // HTTP hata kodlarını kontrol et (401: Oturum Açılmamış olabilir)
+        if (response.status === 401) {
+             throw new Error("Oturum süresi doldu veya açılmamış. Lütfen giriş yapın.");
+        }
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`API Hatası: ${errorData.error || response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // Backend'in {'content': '...', 'role': 'assistant'} yapısını kullanıyoruz.
+        return data.content || "API'den geçerli bir yanıt alınamadı."; 
+
+    } catch (error) {
+        console.error('Gemini API çağrısında bir hata oluştu:', error);
+        return `Üzgünüm, bir sorun oluştu: ${error.message}.`;
+    }
+}
+
+// Chat functionality
+async function sendMessage() {
     const input = document.getElementById('messageInput');
     const message = input.value.trim();
 
@@ -969,17 +1042,46 @@ function sendMessage() {
     addMessage(message, 'user');
     input.value = '';
 
-    // Simulate bot response
-    setTimeout(() => {
-        const botResponse = generateBotResponse(message);
+    // 1. Sohbet geçmişini al
+    const chatHistory = getChatHistory();
+    
+    // 2. Bot yanıtı gelene kadar yükleniyor mesajı ekle
+    const loadingMessageId = `loading-${Date.now()}`;
+    addMessage('Yazılıyor...', 'bot', loadingMessageId);
+    
+    try {
+        // 3. Backend API'yi çağırarak Gemini yanıtını al
+        const botResponse = await getGeminiResponseFromApi(chatHistory);
+
+        // 4. Yükleniyor mesajını kaldır ve gerçek yanıtı ekle
+        const loadingElement = document.getElementById(loadingMessageId);
+        if (loadingElement) loadingElement.remove();
+        
         addMessage(botResponse, 'bot');
-    }, 500);
+
+    } catch (error) {
+        // Hata durumunda yükleniyor mesajını kaldır ve hata mesajı göster
+        const loadingElement = document.getElementById(loadingMessageId);
+        if (loadingElement) loadingElement.remove();
+        
+        addMessage(`Hata: ${error.message}`, 'bot');
+        // Giriş hatasıysa, logout yapıp login sayfasına yönlendirilebilir
+        if (error.message.includes("Oturum süresi")) {
+             handleLogout(); // Varsayılan log out fonksiyonunu çağırabilirsin
+             showPage('login');
+        }
+    }
 }
 
-function addMessage(text, sender) {
+// addMessage fonksiyonunu bir id parametresi alacak şekilde düzenleyelim
+function addMessage(text, sender, id = null) {
     const messagesContainer = document.getElementById('messages');
+    // ... (addMessage fonksiyonunun geri kalanı aynı)
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
+    if (id) {
+        messageDiv.id = id;
+    }
 
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
@@ -992,27 +1094,7 @@ function addMessage(text, sender) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function generateBotResponse(userMessage) {
-    const responses = {
-        'merhaba': 'Merhaba! Sana nasıl yardımcı olabilirim?',
-        'nasılsın': 'İyiyim, teşekkür ederim! Sen nasılsın?',
-        'yardım': 'Sana yardımcı olmaktan mutluluk duyarım. Ne hakkında bilgi istiyorsun?',
-        'teşekkür': 'Bir şey değil! Başka bir şey sorabilir misin?',
-        'bye': 'Hoşça kalın! Tekrar görüşmek üzere.',
-        'default': 'İlginç bir soru! Bunu daha detaylı açıklar mısın?'
-    };
-
-    const lowerMessage = userMessage.toLowerCase();
-
-    for (const [key, value] of Object.entries(responses)) {
-        if (key !== 'default' && lowerMessage.includes(key)) {
-            return value;
-        }
-    }
-
-    return responses.default;
-}
-
+// generateBotResponse fonksiyonu tamamen kaldırıldı
 // Enter key to send message
 document.addEventListener('DOMContentLoaded', function() {
     const messageInput = document.getElementById('messageInput');
