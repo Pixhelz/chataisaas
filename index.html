@@ -891,7 +891,60 @@ function handleLogin(event) {
     showPage('chat');
 }
 
-function handleRegister(event) {
+// ! Bu sabitleri, Render domaininizle değiştirin
+const RENDER_DOMAIN = 'https://app-py-4xb9.onrender.com';
+
+
+// AUTHENTICATION
+
+async function handleLogin(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    hideError('login-error');
+
+    if (!username || !password) {
+        showError('login-error', 'Lütfen tüm alanları doldurun');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${RENDER_DOMAIN}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            // Flask session'ı için gerekli
+            credentials: 'include', 
+            body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            showError('login-error', result.error || 'Giriş başarısız');
+            return;
+        }
+
+        // Başarılı girişten sonra session cookie tarayıcıda tutulur.
+        // Frontend'de yalnızca kullanıcı adını saklıyoruz (yerel veritabanını kaldırıyoruz)
+        localStorage.setItem('currentUser', JSON.stringify({ username: result.username }));
+        localStorage.setItem('isLoggedIn', 'true');
+
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+
+        showPage('chat');
+    } catch (error) {
+        console.error('Login hatası:', error);
+        showError('login-error', 'Sunucuya bağlanılamadı.');
+    }
+}
+
+
+async function handleRegister(event) {
     event.preventDefault();
 
     const username = document.getElementById('register-username').value;
@@ -899,10 +952,8 @@ function handleRegister(event) {
     const password = document.getElementById('register-password').value;
     const passwordConfirm = document.getElementById('register-password-confirm').value;
 
-    // Hide previous errors
     hideError('register-error');
 
-    // Validate
     if (!username || !email || !password || !passwordConfirm) {
         showError('register-error', 'Lütfen tüm alanları doldurun');
         return;
@@ -918,34 +969,59 @@ function handleRegister(event) {
         return;
     }
 
-    // Register user
-    const result = db.registerUser(username, email, password);
-    
-    if (!result.success) {
-        showError('register-error', result.message);
-        return;
+    try {
+        const response = await fetch(`${RENDER_DOMAIN}/api/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            // Flask session'ı için gerekli
+            credentials: 'include', 
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            showError('register-error', result.error || 'Kayıt başarısız');
+            return;
+        }
+
+        // Başarılı kayıttan sonra session cookie tarayıcıda tutulur.
+        localStorage.setItem('currentUser', JSON.stringify({ username: result.username }));
+        localStorage.setItem('isLoggedIn', 'true');
+
+        document.getElementById('register-username').value = '';
+        document.getElementById('register-email').value = '';
+        document.getElementById('register-password').value = '';
+        document.getElementById('register-password-confirm').value = '';
+
+        showPage('chat');
+
+    } catch (error) {
+        console.error('Register hatası:', error);
+        showError('register-error', 'Sunucuya bağlanılamadı.');
     }
-
-    // Store current user
-    const user = db.getUserByUsername(username);
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    localStorage.setItem('isLoggedIn', 'true');
-
-    // Clear form
-    document.getElementById('register-username').value = '';
-    document.getElementById('register-email').value = '';
-    document.getElementById('register-password').value = '';
-    document.getElementById('register-password-confirm').value = '';
-    hideError('register-error');
-
-    // Show chat page
-    showPage('chat');
 }
 
-function handleLogout() {
+// handleLogout fonksiyonunu da backend API'sine çağrı yapacak şekilde güncelleyelim.
+async function handleLogout() {
+    try {
+        await fetch(`${RENDER_DOMAIN}/api/logout`, {
+            method: 'POST',
+            credentials: 'include' // Session'ı silmek için cookie'yi göndermeliyiz
+        });
+    } catch (error) {
+        console.error("Logout sırasında hata oluştu, ancak yerel veriler siliniyor.");
+    }
+    
+    // Yerel temizlik
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isLoggedIn');
+    
+    // Mesajları temizle
     document.getElementById('messages').innerHTML = '<div class="message bot"><div class="message-content">Merhaba! Ben LiaRoza. Size nasıl yardımcı olabilirim?</div></div>';
+    
     showPage('home');
 }
 
