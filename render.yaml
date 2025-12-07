@@ -5,10 +5,11 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --timeout 120
     envVars:
-      - key: AIzaSyB0FyFweTCOEPZmdo5n3HOtjHg92m-djog
+      - key: AIzaSyAIofeO0UnMLoWsDSBGE-yKdLz5sBZzawM
         sync: false
       - key: SECRET_KEY
         generateValue: true
+
 
 
 
